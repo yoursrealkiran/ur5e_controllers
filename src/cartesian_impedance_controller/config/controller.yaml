@@ -1,0 +1,12 @@
+ur5e_cartesian_controller:
+  type: cartesian_impedance_controller/CartesianImpedanceController
+  ros__parameters:
+    joints: ["shoulder_pan_joint","shoulder_lift_joint","elbow_joint",
+             "wrist_1_joint","wrist_2_joint","wrist_3_joint"]
+    end_effector: "tool0"
+    stiffness: [300.0, 300.0, 300.0, 20.0, 20.0, 20.0]     # N/m , Nm/rad
+    damping_factors: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]        # unitless; 1.0 ≈ critical
+    use_nullspace: false
+    nullspace_stiffness: 0.0
+    nullspace_damping: 0.0
+    update_alpha: 0.1
