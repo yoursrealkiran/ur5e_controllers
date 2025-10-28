@@ -28,5 +28,5 @@ The launch also disables the `joint_state_publisher_gui` to avoid topic conflict
 - **Xbox controller**
 - Packages:
   ```bash
-  sudo apt install ros-humble-joy ros-humble-ur-description
+  sudo apt install ros-humble-joy 
 
