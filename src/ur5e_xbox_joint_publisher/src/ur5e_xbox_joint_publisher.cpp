@@ -42,7 +42,7 @@ private:
     sensor_msgs::msg::JointState js;
     js.header.stamp = now;
 
-    js.name.assign(joint_names_.begin(), joint_names_.end());  // ✅ FIXED
+    js.name.assign(joint_names_.begin(), joint_names_.end());  
     for (size_t i = 0; i < positions_.size(); ++i)
       positions_[i] += deltas_[i];
     js.position.assign(positions_.begin(), positions_.end());
