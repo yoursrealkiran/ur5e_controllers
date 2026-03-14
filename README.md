@@ -7,7 +7,7 @@ It replaces the `joint_state_publisher_gui` sliders with a C++ node that publish
 
 ## 📺 Demo
 
-![UR5e Xbox Control Demo](videos/demo_rviz_xbox.gif)
+![UR5e Xbox Control Demo](videos/demo_rviz_xbox_2.gif)
 #
 ---
 
