@@ -5,6 +5,12 @@ It replaces the `joint_state_publisher_gui` sliders with a C++ node that publish
 
 ---
 
+## 📺 Demo
+
+![UR5e Xbox Control Demo](videos/demo_rviz_xbox.gif)
+#
+---
+
 ## 🧩 Overview
 
 The package `ur5e_xbox_joint_publisher` provides a ROS 2 node that:
