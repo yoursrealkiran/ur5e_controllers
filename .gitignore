@@ -3,3 +3,10 @@ build/
 install/
 log/
 
+# Ignore VS Code local workspace settings and databases
+.vscode/
+**/.vscode/
+*.db
+*.db-shm
+*.db-wal
+
