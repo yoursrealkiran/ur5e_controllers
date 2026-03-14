@@ -1,7 +1,7 @@
-# 🎮 UR5e Xbox Controller Teleoperation (ROS 2 Humble)
+# 🎮 UR5e Xbox Controller Teleoperation (ROS 2 Jazzy)
 
-This project allows you to **control a UR5e robot in RViz** using an **Xbox controller** under **ROS 2 Humble**.  
-It replaces the `joint_state_publisher_gui` sliders with a C++ node that publishes joint states based on real-time joystick input.
+This project allows you to **control a UR5e robot in RViz** using an **Xbox controller** under **ROS 2 Jazzy**.  
+It replaces the `joint_state_publisher_gui` sliders with a C++ node that publishes joint states based on real-time joystick input from Xbox controller.
 
 ---
 
@@ -30,9 +30,28 @@ The launch also disables the `joint_state_publisher_gui` to avoid topic conflict
 
 ## ⚙️ Requirements
 
-- **ROS 2 Humble**
+- **ROS 2 Jazzy**
 - **Xbox controller**
-- Packages:
-  ```bash
-  sudo apt install ros-humble-joy 
+
+---
+
+## Build and Launch
+
+Install ROS 2 Jazzy from [`ROS 2 Documentation: jazzy`](https://docs.ros.org/en/jazzy/Installation.html)
+
+After installation of ROS 2 Jazzy, In the terminal
+
+`source /opt/ros/jazzy/setup.bash`
+
+`git clone https://github.com/yoursrealkiran/ur5e_controllers.git`
+
+`cd ur5e_controllers`
+
+`colcon build --packages-select ur5e_xbox_joint_publisher`
+
+`source install/setup.bash`
+
+`ros2 launch ur5e_xbox_joint_publisher ur5e_xbox_rviz.launch.py`
+
+Note: Before launching, make sure the Xbox controller is connected to your PC/system.
 
