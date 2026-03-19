@@ -21,7 +21,7 @@ install(TARGETS
   ur5e_xbox_gazebo
   DESTINATION lib/${PROJECT_NAME})
 
-# === Install launch files and config ===
+# === Install launch files, config and urdf ===
 install(DIRECTORY launch config urdf
   DESTINATION share/${PROJECT_NAME}/
 )
