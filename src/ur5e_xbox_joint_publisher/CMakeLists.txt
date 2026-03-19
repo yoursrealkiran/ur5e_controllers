@@ -22,7 +22,7 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME})
 
 # === Install launch files and config ===
-install(DIRECTORY launch config
+install(DIRECTORY launch config urdf
   DESTINATION share/${PROJECT_NAME}/
 )
 
