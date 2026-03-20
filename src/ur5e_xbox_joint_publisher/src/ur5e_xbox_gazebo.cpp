@@ -60,7 +60,7 @@ private:
 
     // To tell the controller how fast to get to this point.
     // Since we loop at 20ms (50Hz), a 25-30ms buffer ensures smooth motion.
-    point.time_from_start = rclcpp::Duration(0, 30000000); // 30 ms = 30000000 ns
+    point.time_from_start = rclcpp::Duration(30ms); //  30 ms 
 
     message.points.push_back(point);
     pub_->publish(message);
