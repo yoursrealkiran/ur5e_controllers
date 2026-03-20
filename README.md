@@ -1,7 +1,7 @@
 # 🎮 UR5e Xbox Controller Teleoperation (ROS 2 Jazzy)
 
-This project allows you to **control a UR5e robot in RViz** using an **Xbox controller** under **ROS 2 Jazzy**.  
-It replaces the `joint_state_publisher_gui` sliders with a C++ node that publishes joint states based on real-time joystick input from Xbox controller.
+This project allows you to **control a UR5e robot** in both **RViz** (visualization) and **Gazebo** (physics simulation) using an **Xbox controller** under **ROS 2 Jazzy**.  
+It replaces the `joint_state_publisher_gui` sliders with a C++ node that that converts real-time joystick input into joint trajectory commands for a simulated robot.
 
 ---
 
@@ -13,24 +13,32 @@ It replaces the `joint_state_publisher_gui` sliders with a C++ node that publish
 
 ## 🧩 Overview
 
-The package `ur5e_xbox_joint_publisher` provides a ROS 2 node that:
+The ur5e_xbox_joint_publisher package now supports two modes of operation:
 
-- Subscribes to `/joy` messages from the `joy_node`
-- Converts Xbox stick and trigger movements into joint increments
-- Publishes `sensor_msgs/msg/JointState` messages to `/joint_states`
-- Animates the UR5e model in RViz through `robot_state_publisher`
+**1. RViz Mode (Kinematic Visualization)**
 
-A launch file (`ur5e_xbox_rviz.launch.py`) brings up everything at once:
-- UR5e robot model from [`Universal_Robots_ROS2_Description`](https://github.com/UniversalRobots/Universal_Robots_ROS2_Description)
-- `joy_node` joystick driver
-- Your C++ Xbox joint publisher node  
-The launch also disables the `joint_state_publisher_gui` to avoid topic conflicts.
+- Node: ur5e_xbox_joint_publisher
+- Function: Directly publishes sensor_msgs/msg/JointState to /joint_states.
+- Use Case: Light-weight testing of joint mappings and URDF visualization.
+
+**2. Gazebo Mode (Dynamic Simulation)**
+
+- Node: ur5e_xbox_gazebo
+- Function: Publishes trajectory_msgs/msg/JointTrajectory to the ur5e_arm_controller.
+- Features: Uses a custom Xacro wrapper (gazebo_ur5e.xacro) to inject ros2_control hardware interfaces.
+    1. Uses Gazebo Sim with the gz_ros2_control plugin.
+    2. Full physics interaction and gravity compensation.
+
+**The Robot model**
+
+UR5e robot model from [`Universal_Robots_ROS2_Description`](https://github.com/UniversalRobots/Universal_Robots_ROS2_Description) is used here.
 
 ---
 
 ## ⚙️ Requirements
 
 - **ROS 2 Jazzy**
+- **Gazebo Sim (Included with ROS 2 desktop-full)**
 - **Xbox controller**
 
 ---
@@ -51,7 +59,14 @@ After installation of ROS 2 Jazzy, In the terminal
 
 `source install/setup.bash`
 
+
+**Launching in RViz (Visualization Only)**
+
 `ros2 launch ur5e_xbox_joint_publisher ur5e_xbox_rviz.launch.py`
+
+**Launching in Gazebo (Physics Simulation)**
+
+`ros2 launch ur5e_xbox_joint_publisher ur5e_xbox_gazebo.launch.py`
 
 Note: Before launching, make sure the Xbox controller is connected to your PC/system.
 
