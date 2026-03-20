@@ -57,9 +57,21 @@ After installation of ROS 2 Jazzy, In the terminal
 
 `source /opt/ros/jazzy/setup.bash`
 
+Clone this repository
+
 `git clone https://github.com/yoursrealkiran/ur5e_controllers.git`
 
-`cd ur5e_controllers`
+Navigate to src/ folder 
+
+`cd ur5e_controllers/src`
+
+Clone Universal_Robots_ROS2_Description repository
+
+`git clone https://github.com/UniversalRobots/Universal_Robots_ROS2_Description.git`
+
+Use below command to navigate back to ur5e_controllers folder (i.e, come out of src/ folder) 
+
+`cd ..`
 
 `colcon build --packages-select ur5e_xbox_joint_publisher Universal_Robots_ROS2_Description`
 
