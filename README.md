@@ -61,7 +61,7 @@ After installation of ROS 2 Jazzy, In the terminal
 
 `cd ur5e_controllers`
 
-`colcon build --packages-select ur5e_xbox_joint_publisher`
+`colcon build --packages-select ur5e_xbox_joint_publisher Universal_Robots_ROS2_Description`
 
 `source install/setup.bash`
 
