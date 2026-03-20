@@ -79,6 +79,25 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}]
     )
 
+    # Including RViz
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        parameters=[{'use_sim_time': True}],
+        # Optional: point to a saved .rviz config file
+        # arguments=['-d', PathJoinSubstitution([pkg_share, 'rviz', 'view_robot.rviz'])]
+    )
+
+    # This bridge specifically translates the Gazebo clock into a ROS 2 /clock message
+    ros_gz_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
+        output='screen'
+    )
+
     return LaunchDescription([
         gz_sim,
         node_robot_state_publisher,
@@ -86,5 +105,7 @@ def generate_launch_description():
         joint_state_broadcaster,
         arm_controller_spawner,
         joy_node,
-        xbox_to_gazebo
+        xbox_to_gazebo,
+        ros_gz_bridge,
+        rviz_node
     ])
