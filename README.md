@@ -5,9 +5,15 @@ It replaces the `joint_state_publisher_gui` sliders with a C++ node that that co
 
 ---
 
-## 📺 Demo
+## 📺 RViz Demo
 
-![UR5e Xbox Control Demo](videos/demo_rviz_xbox_2.gif)
+![UR5e Xbox Control RViz Demo](videos/demo_rviz_xbox_2.gif)
+#
+---
+
+## 📺 Gazebo Demo
+
+![UR5e Xbox Control Gazebo Demo](videos/demo_gazebo_xbox.gif)
 #
 ---
 
