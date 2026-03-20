@@ -16,7 +16,7 @@ public:
     joint_names_({"shoulder_pan_joint","shoulder_lift_joint","elbow_joint",
                   "wrist_1_joint","wrist_2_joint","wrist_3_joint"})
   {
-    // Change: Publish to the controller's command topic instead of joint_states
+    
     pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
       "/ur5e_arm_controller/joint_trajectory", 10);
       
@@ -31,11 +31,11 @@ private:
   void joy_cb(const sensor_msgs::msg::Joy::SharedPtr msg)
   {
     double scale = 0.015;
-    // Check if RB is pressed for boost
+    // Checks if RB is pressed for boost
     bool boost = msg->buttons.size() > 5 ? msg->buttons[5] : 0;
     if (boost) scale *= 3.0;
 
-    // Mapping logic (keeping your original mapping)
+    // Mapping logic 
     deltas_[0] = msg->axes[0] * scale;
     deltas_[1] = msg->axes[1] * scale;
     deltas_[2] = msg->axes[3] * scale;
@@ -58,9 +58,9 @@ private:
       point.positions.push_back(positions_[i]);
     }
 
-    // Crucial for Gazebo: Tell the controller how fast to get to this point.
+    // To tell the controller how fast to get to this point.
     // Since we loop at 20ms (50Hz), a 25-30ms buffer ensures smooth motion.
-    point.time_from_start = rclcpp::Duration(0, 25000000); // 25 nanoseconds
+    point.time_from_start = rclcpp::Duration(0, 30000000); // 30 ms = 30000000 ns
 
     message.points.push_back(point);
     pub_->publish(message);
