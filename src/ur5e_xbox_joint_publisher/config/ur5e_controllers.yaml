@@ -41,8 +41,8 @@ gripper_controller:
     state_publish_rate: 100.0
     action_monitor_rate: 20.0
 
-    # These constraints are excellent—keep them! 
-    # They prevent the controller from aborting if Gazebo physics 
+   
+    # These constraints, They prevent the controller from aborting if Gazebo physics 
     # causes a tiny bounce when the gripper hits an object.
     constraints:
       stopped_velocity_tolerance: 0.01
