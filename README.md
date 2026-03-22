@@ -1,7 +1,6 @@
 # 🎮 UR5e Xbox Controller Teleoperation (ROS 2 Jazzy)
 
-This project allows you to **control a UR5e robot** in both **RViz** (visualization) and **Gazebo** (physics simulation) using an **Xbox controller** under **ROS 2 Jazzy**.  
-It replaces the `joint_state_publisher_gui` sliders with a C++ node that that converts real-time joystick input into joint trajectory commands for a simulated robot.
+This project allows you to **control a UR5e robot (with Robotiq gripper)** in both **RViz** (visualization) and **Gazebo** (physics simulation) using an **Xbox controller** under **ROS 2 Jazzy**.  
 
 ---
 
@@ -30,14 +29,23 @@ The ur5e_xbox_joint_publisher package now supports two modes of operation:
 **2. Gazebo Mode (Dynamic Simulation)**
 
 - Node: ur5e_xbox_gazebo
-- Function: Publishes trajectory_msgs/msg/JointTrajectory to the ur5e_arm_controller.
+- Function: Publishes trajectory_msgs/msg/JointTrajectory to the ur5e_arm_controller and the gripper_controller.
 - Features: Uses a custom Xacro wrapper (gazebo_ur5e.xacro) to inject ros2_control hardware interfaces.
     1. Uses Gazebo Sim with the gz_ros2_control plugin.
     2. Full physics interaction and gravity compensation.
+    3. End-Effector: Integrated Robotiq 2F-85 Gripper with parallel linkage mimicry.
 
 **The Robot model**
 
 UR5e robot model from [`Universal_Robots_ROS2_Description`](https://github.com/UniversalRobots/Universal_Robots_ROS2_Description) is used here.
+
+---
+
+**The Gripper**
+
+Install Robotiq description package using below command in the terminal,
+
+`sudo apt install ros-jazzy-robotiq-description`
 
 ---
 
