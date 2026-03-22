@@ -1,6 +1,7 @@
 import os
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.actions import IncludeLaunchDescription, RegisterEventHandler, SetEnvironmentVariable
+from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -10,15 +11,24 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
     # 1. Paths and Setup
     pkg_share = FindPackageShare("ur5e_xbox_joint_publisher")
-    ur_description_share = get_package_share_directory('ur_description')
+    
+    # IMPORTANT: We point to the PARENT folder of the descriptions 
+    # so that 'model://ur_description' resolves correctly in Gazebo.
+    ur_desc_path = os.path.join(get_package_share_directory('ur_description'), '..')
+    robotiq_desc_path = os.path.join(get_package_share_directory('robotiq_description'), '..')
+    pkg_urdf_path = os.path.join(get_package_share_directory('ur5e_xbox_joint_publisher'), '..')
 
-    # FIX: Set the Gazebo resource path so it can find the meshes automatically
-    if 'GZ_SIM_RESOURCE_PATH' in os.environ:
-        os.environ['GZ_SIM_RESOURCE_PATH'] += os.pathsep + ur_description_share
-    else:
-        os.environ['GZ_SIM_RESOURCE_PATH'] = ur_description_share
+    # Environment variable for Gazebo Sim (Jazzy) to find meshes
+    set_gz_resource_path = SetEnvironmentVariable(
+        name='GZ_SIM_RESOURCE_PATH',
+        value=[os.pathsep.join([
+            ur_desc_path, 
+            robotiq_desc_path,
+            pkg_urdf_path
+        ])]
+    )
 
-    # Point to your NEW wrapper xacro file
+    # Point to your wrapper xacro file
     robot_xacro_file = PathJoinSubstitution([pkg_share, "urdf", "gazebo_ur5e.xacro"])
 
     # 2. Get URDF via Xacro
@@ -28,15 +38,15 @@ def generate_launch_description():
     ])
     robot_description = {"robot_description": robot_description_content}
 
-    # 3. Start Gazebo Sim with an empty world 
+    # 3. Start Gazebo Sim
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
         ]),
-        launch_arguments={'gz_args': '-r empty.sdf'}.items(),
+        launch_arguments={'gz_args': '-r --physics-engine gz-physics-bullet-featherstone-plugin empty.sdf'}.items(),
     )
 
-    # 4. Spawn Robot into Gazebo
+    # 4. Spawn Robot
     spawn_robot = Node(
         package='ros_gz_sim',
         executable='create',
@@ -65,6 +75,12 @@ def generate_launch_description():
         arguments=["ur5e_arm_controller"],
     )
 
+    gripper_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["gripper_controller"],
+    )
+
     # 7. Xbox & Joy Nodes
     joy_node = Node(
         package="joy",
@@ -79,34 +95,56 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}]
     )
 
-    # Including RViz
+    # 8. ROS-GZ Bridge
+    ros_gz_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=[
+            '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
+            '/camera/image_raw@sensor_msgs/msg/Image[gz.msgs.Image',
+            '/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo'
+        ],
+        output='screen'
+    )
+
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
         name='rviz2',
         output='screen',
-        parameters=[{'use_sim_time': True}],
-        # Optional: point to a saved .rviz config file
-        # arguments=['-d', PathJoinSubstitution([pkg_share, 'rviz', 'view_robot.rviz'])]
+        parameters=[{'use_sim_time': True}]
     )
 
-    # This bridge specifically translates the Gazebo clock into a ROS 2 /clock message
-    ros_gz_bridge = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
-                   '/camera/image_raw@sensor_msgs/msg/Image[gz.msgs.Image',
-                   '/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo'
-                   ],
-        output='screen'
+    # 9. Sequential Controller Loading
+    load_joint_state_broadcaster = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=spawn_robot,
+            on_exit=[joint_state_broadcaster],
+        )
+    )
+
+    load_arm_controller = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster,
+            on_exit=[arm_controller_spawner],
+        )
+    )
+
+    load_gripper_controller = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=arm_controller_spawner,
+            on_exit=[gripper_controller_spawner],
+        )
     )
 
     return LaunchDescription([
+        set_gz_resource_path,
         gz_sim,
         node_robot_state_publisher,
         spawn_robot,
-        joint_state_broadcaster,
-        arm_controller_spawner,
+        load_joint_state_broadcaster,
+        load_arm_controller,
+        load_gripper_controller,
         joy_node,
         xbox_to_gazebo,
         ros_gz_bridge,
