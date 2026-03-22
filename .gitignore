@@ -1,12 +1,14 @@
-src/Universal_Robots_ROS2_Description/
-build/
-install/
-log/
+# Only ignore these at the root of the workspace
 
-# Ignore VS Code local workspace settings and databases
+/build/
+/install/
+/log/
+
+src/Universal_Robots_ROS2_Description/ 
+
+# Ignore VS Code local workspace settings and databases (recursive is fine here)
 .vscode/
 **/.vscode/
 *.db
 *.db-shm
 *.db-wal
-
