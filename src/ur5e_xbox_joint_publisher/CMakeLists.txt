@@ -5,15 +5,24 @@ project(ur5e_xbox_joint_publisher)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(trajectory_msgs REQUIRED) # Added for Gazebo support
+find_package(trajectory_msgs REQUIRED)
 
 # === Executable: RViz Version ===
+# Update: Link trajectory_msgs here too as my .cpp uses it
 add_executable(ur5e_xbox_joint_publisher src/ur5e_xbox_joint_publisher.cpp)
-ament_target_dependencies(ur5e_xbox_joint_publisher rclcpp sensor_msgs)
+ament_target_dependencies(ur5e_xbox_joint_publisher 
+  rclcpp 
+  sensor_msgs 
+  trajectory_msgs
+)
 
 # === Executable: Gazebo Version ===
 add_executable(ur5e_xbox_gazebo src/ur5e_xbox_gazebo.cpp)
-ament_target_dependencies(ur5e_xbox_gazebo rclcpp sensor_msgs trajectory_msgs)
+ament_target_dependencies(ur5e_xbox_gazebo 
+  rclcpp 
+  sensor_msgs 
+  trajectory_msgs
+)
 
 # === Install targets ===
 install(TARGETS 
@@ -22,8 +31,9 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME})
 
 # === Install launch files, config and urdf ===
+# Fix: Using 'install(DIRECTORY...)' is good, but ensure paths are clean
 install(DIRECTORY launch config urdf
-  DESTINATION share/${PROJECT_NAME}/
+  DESTINATION share/${PROJECT_NAME}
 )
 
 ament_package()
