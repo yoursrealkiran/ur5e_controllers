@@ -3,11 +3,14 @@ controller_manager:
     update_rate: 100
     use_sim_time: True
 
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
     ur5e_arm_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
-    joint_state_broadcaster:
-      type: joint_state_broadcaster/JointStateBroadcaster
+    gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
 
 ur5e_arm_controller:
   ros__parameters:
@@ -23,3 +26,32 @@ ur5e_arm_controller:
     state_interfaces:
       - position
       - velocity
+    state_publish_rate: 100.0 # Added for smoother visualization
+    action_monitor_rate: 20.0
+
+gripper_controller:
+  ros__parameters:
+    joints:
+      - robotiq_85_left_knuckle_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    state_publish_rate: 100.0
+    action_monitor_rate: 20.0
+
+    # These constraints are excellent—keep them! 
+    # They prevent the controller from aborting if Gazebo physics 
+    # causes a tiny bounce when the gripper hits an object.
+    constraints:
+      stopped_velocity_tolerance: 0.01
+      goal_time: 0.0
+      robotiq_85_left_knuckle_joint:
+        goal: 0.02
+        trajectory: 0.05
+
+    # High gains are good for the Robotiq simulation to overcome 
+    # the friction in the mimic joint plugins.
+    gains:
+      robotiq_85_left_knuckle_joint: {p: 2000.0, i: 1.0, d: 20.0}
