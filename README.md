@@ -41,14 +41,6 @@ UR5e robot model from [`Universal_Robots_ROS2_Description`](https://github.com/U
 
 ---
 
-**The Gripper**
-
-Install Robotiq description package using below command in the terminal,
-
-`sudo apt install ros-jazzy-robotiq-description`
-
----
-
 ## ⚙️ Requirements
 
 - **ROS 2 Jazzy**
@@ -64,6 +56,10 @@ Install ROS 2 Jazzy from [`ROS 2 Documentation: jazzy`](https://docs.ros.org/en/
 After installation of ROS 2 Jazzy, In the terminal
 
 `source /opt/ros/jazzy/setup.bash`
+
+The Gripper: Install Robotiq description package using below command in the terminal,
+
+`sudo apt install ros-jazzy-robotiq-description`
 
 Clone this repository
 
