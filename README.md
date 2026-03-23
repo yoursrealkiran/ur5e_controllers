@@ -1,18 +1,18 @@
 # 🎮 UR5e Xbox Controller Teleoperation (ROS 2 Jazzy)
 
-This project allows you to **control a UR5e robot (with Robotiq gripper)** in both **RViz** (visualization) and **Gazebo** (physics simulation) using an **Xbox controller** under **ROS 2 Jazzy**.  
+This project allows you to **control a UR5e robot (with Robotiq gripper)** in both **RViz** (visualization) and **Gazebo** (physics simulation) using an **Xbox controller** under **ROS 2 Jazzy**. The UR5e is now equipped with a tool-mounted camera for First-Person View (FPV) teleoperation. 
 
 ---
 
 ## 📺 RViz Demo
 
-![UR5e Xbox Control RViz Demo](videos/demo_rviz_xbox_2.gif)
+![UR5e Xbox Control RViz Demo](videos/demo_rviz_xbox_3.gif)
 #
 ---
 
 ## 📺 Gazebo Demo
 
-![UR5e Xbox Control Gazebo Demo](videos/demo_gazebo_xbox.gif)
+![UR5e Xbox Control Gazebo Demo](videos/demo_gazebo_xbox_3.gif)
 #
 ---
 
@@ -26,7 +26,7 @@ The ur5e_xbox_joint_publisher package now supports two modes of operation:
 - Function: Directly publishes sensor_msgs/msg/JointState to /joint_states.
 - Use Case: Light-weight testing of joint mappings and URDF visualization.
 
-**2. Gazebo Mode (Dynamic Simulation)**
+**2. Gazebo (Dynamic Simulation) + RViz Mode**
 
 - Node: ur5e_xbox_gazebo
 - Function: Publishes trajectory_msgs/msg/JointTrajectory to the ur5e_arm_controller and the gripper_controller.
@@ -34,10 +34,8 @@ The ur5e_xbox_joint_publisher package now supports two modes of operation:
     1. Uses Gazebo Sim with the gz_ros2_control plugin.
     2. Full physics interaction and gravity compensation.
     3. End-Effector: Integrated Robotiq 2F-85 Gripper with parallel linkage mimicry.
-
-**The Robot model**
-
-UR5e robot model from [`Universal_Robots_ROS2_Description`](https://github.com/UniversalRobots/Universal_Robots_ROS2_Description) is used here.
+    4. Camera: Mounted on the robotiq_85_base_link (Resolution: 640x480 @ 30fps), ROS 2 Topic: /camera/image_raw (Bridged from Gazebo Sim).
+    5. To use camera, add Image Display panel in RViz and Set the topic to /camera/image_raw.
 
 ---
 
@@ -46,10 +44,14 @@ UR5e robot model from [`Universal_Robots_ROS2_Description`](https://github.com/U
 - **ROS 2 Jazzy**
 - **Gazebo Sim (Included with ROS 2 desktop-full)**
 - **Xbox controller**
+- **Universal_Robots_ROS2_Description**
+- **Robotiq description package**
 
 ---
 
 ## Build and Launch
+
+**Install ROS 2 Jazzy**
 
 Install ROS 2 Jazzy from [`ROS 2 Documentation: jazzy`](https://docs.ros.org/en/jazzy/Installation.html)
 
@@ -57,13 +59,21 @@ After installation of ROS 2 Jazzy, In the terminal
 
 `source /opt/ros/jazzy/setup.bash`
 
+**Install Robotiq description package**
+
 The Gripper: Install Robotiq description package using below command in the terminal,
 
 `sudo apt install ros-jazzy-robotiq-description`
 
-Clone this repository
+**Clone this repository**
+
+In the terminal, use below command
 
 `git clone https://github.com/yoursrealkiran/ur5e_controllers.git`
+
+**The Robot model**
+
+UR5e robot model from [`Universal_Robots_ROS2_Description`](https://github.com/UniversalRobots/Universal_Robots_ROS2_Description) is used here.
 
 Navigate to src/ folder 
 
@@ -73,11 +83,13 @@ Clone Universal_Robots_ROS2_Description repository
 
 `git clone https://github.com/UniversalRobots/Universal_Robots_ROS2_Description.git`
 
+**Build all the packages**
+
 Use below command to navigate back to ur5e_controllers folder (i.e, come out of src/ folder) 
 
 `cd ..`
 
-`colcon build --packages-select ur5e_xbox_joint_publisher Universal_Robots_ROS2_Description`
+`colcon build --packages-select ur5e_xbox_joint_publisher ur_description`
 
 `source install/setup.bash`
 
@@ -86,7 +98,7 @@ Use below command to navigate back to ur5e_controllers folder (i.e, come out of 
 
 `ros2 launch ur5e_xbox_joint_publisher ur5e_xbox_rviz.launch.py`
 
-**Launching in Gazebo (Physics Simulation)**
+**Launching in Gazebo (Physics Simulation) and RViz**
 
 `ros2 launch ur5e_xbox_joint_publisher ur5e_xbox_gazebo.launch.py`
 
