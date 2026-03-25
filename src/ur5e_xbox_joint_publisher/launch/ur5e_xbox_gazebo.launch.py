@@ -137,6 +137,44 @@ def generate_launch_description():
         )
     )
 
+    # Use if you want red cube in simulation
+       
+    spawn_cube = Node(
+        package='ros_gz_sim',
+        executable='create',
+        arguments=[
+            '-name', 'red_cube',
+            '-file', os.path.expanduser('src/ur5e_xbox_joint_publisher/urdf/red_cube.sdf'),
+            '-x', '0.5', '-y', '0.0', '-z', '0.05'
+        ],
+        output='screen',
+    )
+
+    spawn_plate = Node(
+        package='ros_gz_sim',
+        executable='create',
+        arguments=[
+            '-name', 'green_plate',
+            '-file', os.path.expanduser('src/ur5e_xbox_joint_publisher/urdf/green_plate.sdf'),
+            '-x', '0.5', '-y', '0.2', '-z', '0.005'
+        ],
+        output='screen',
+    )
+
+    # Use if you want red ball in simulation
+
+    spawn_ball = Node(
+        package='ros_gz_sim',
+        executable='create',
+        arguments=[
+            '-name', 'red_ball',  # NEW: Change name to match SDF
+            '-file', os.path.expanduser('src/ur5e_xbox_joint_publisher/urdf/red_ball.sdf'),
+            '-x', '0.5', '-y', '0.0', '-z', '0.05'
+        ],
+        output='screen',
+    )
+
+
     return LaunchDescription([
         set_gz_resource_path,
         gz_sim,
@@ -148,5 +186,9 @@ def generate_launch_description():
         joy_node,
         xbox_to_gazebo,
         ros_gz_bridge,
-        rviz_node
+        rviz_node,
+        spawn_cube,   # Use if you want red cube in simulation
+        spawn_plate,
+        # spawn_ball,  # Use if you want red ball in simulation
+    
     ])
