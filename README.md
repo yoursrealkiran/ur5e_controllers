@@ -50,6 +50,7 @@ The **ur5e_xbox_joint_publisher** package supports two modes of operation:
     3. End-Effector: Integrated Robotiq 2F-85 Gripper with parallel linkage mimicry.
     4. Camera: Mounted on the robotiq_85_base_link (Resolution: 640x480 @ 30fps), ROS 2 Topic: /camera/image_raw (Bridged from Gazebo Sim).
     5. To use camera, add Image Display panel in RViz and Set the topic to /camera/image_raw.
+    6. Objects added for pick_n_place task in the simulation
 
 The **ur5e_data_collector** package can be used to collect synthetic dataset from the Gazebo simulation.
 
@@ -122,9 +123,9 @@ Use below command to navigate back to ur5e_controllers folder (i.e, come out of 
 
 Note: Before launching, make sure the Xbox controller is connected to your PC/system.
 
-**To collect synthetic dataset from the above simulation, run the below command**
+**To collect synthetic dataset from the above simulation, run the below command in another terminal**
 
-ros2 run ur5e_data_collector logger --ros-args -p use_sim_time:=true`
+`ros2 run ur5e_data_collector logger --ros-args -p use_sim_time:=true`
 
 press `back` button in Xbox controller to START/STOP recording dataset for each episode
 
