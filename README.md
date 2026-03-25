@@ -1,6 +1,8 @@
-# 🎮 UR5e Xbox Controller Teleoperation (ROS 2 Jazzy)
+# 🎮 UR5e Xbox Controller Teleoperation (ROS 2 Jazzy) in Gazebo simulation to collect synthetic dataset
 
 This project allows you to **control a UR5e robot (with Robotiq gripper)** in both **RViz** (visualization) and **Gazebo** (physics simulation) using an **Xbox controller** under **ROS 2 Jazzy**. The UR5e is now equipped with a tool-mounted camera for First-Person View (FPV) teleoperation. 
+
+This project also includes a package called **ur5e_data_collector** created for synthetic data collection from the simulation (dataset has image data from camera and proprioception data from robot).
 
 ---
 
@@ -16,9 +18,21 @@ This project allows you to **control a UR5e robot (with Robotiq gripper)** in bo
 #
 ---
 
+## 📺 With objects for Pick and Place task (Gazebo)
+
+![UR5e Xbox Control Gazebo Demo with objects](videos/pick_n_place_gazebo.png)
+#
+---
+
+## 📺 Camera feed of Pick and Place task objects from the camera in robot model (RViz)
+
+![UR5e Xbox Control Gazebo Demo with objects](videos/pick_n_place_rviz.jpg)
+#
+---
+
 ## 🧩 Overview
 
-The ur5e_xbox_joint_publisher package now supports two modes of operation:
+The **ur5e_xbox_joint_publisher** package supports two modes of operation:
 
 **1. RViz Mode (Kinematic Visualization)**
 
@@ -37,12 +51,17 @@ The ur5e_xbox_joint_publisher package now supports two modes of operation:
     4. Camera: Mounted on the robotiq_85_base_link (Resolution: 640x480 @ 30fps), ROS 2 Topic: /camera/image_raw (Bridged from Gazebo Sim).
     5. To use camera, add Image Display panel in RViz and Set the topic to /camera/image_raw.
 
+The **ur5e_data_collector** package can be used to collect synthetic dataset from the Gazebo simulation.
+
+- Image data from camera 
+- Proprioception data from robot model 
+
 ---
 
 ## ⚙️ Requirements
 
 - **ROS 2 Jazzy**
-- **Gazebo Sim (Included with ROS 2 desktop-full)**
+- **Gazebo Sim**
 - **Xbox controller**
 - **Universal_Robots_ROS2_Description**
 - **Robotiq description package**
@@ -89,10 +108,9 @@ Use below command to navigate back to ur5e_controllers folder (i.e, come out of 
 
 `cd ..`
 
-`colcon build --packages-select ur5e_xbox_joint_publisher ur_description`
+`colcon build --packages-select ur5e_xbox_joint_publisher ur_description ur5e_data_collector`
 
 `source install/setup.bash`
-
 
 **Launching in RViz (Visualization Only)**
 
@@ -103,4 +121,10 @@ Use below command to navigate back to ur5e_controllers folder (i.e, come out of 
 `ros2 launch ur5e_xbox_joint_publisher ur5e_xbox_gazebo.launch.py`
 
 Note: Before launching, make sure the Xbox controller is connected to your PC/system.
+
+**To collect synthetic dataset from the above simulation, run the below command**
+
+ros2 run ur5e_data_collector logger --ros-args -p use_sim_time:=true`
+
+press `back` button in Xbox controller to START/STOP recording dataset for each episode
 
